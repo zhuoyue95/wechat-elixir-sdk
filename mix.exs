@@ -7,7 +7,9 @@ defmodule Wechat.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      package: package(),
+      deps: deps(),
+      source_url: "https://github.com/zhuoyue95/wechat-elixir-sdk"
     ]
   end
 
@@ -29,6 +31,15 @@ defmodule Wechat.MixProject do
       {:hackney, "~> 1.15"},
       {:jason, "~> 1.1"},
       {:timex, "~> 3.6"}
+    ]
+  end
+
+  defp package() do
+    [
+      # These are the default files included in the package
+      files: ["lib", "priv", "mix.exs", "README*", "LICENSE*"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/zhuoyue95/wechat-elixir-sdk"}
     ]
   end
 end
