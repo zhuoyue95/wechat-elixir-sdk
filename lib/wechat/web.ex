@@ -19,21 +19,26 @@ defmodule Wechat.Web do
       grant_type: "authorization_code"
     ]
 
-    with {:ok, %Tesla.Env{} = env} <- get("/oauth2/access_token", query: query_params),
-         %{"access_token" => access_token, "openid" => open_id, "refresh_token" => refresh_token} <-
-           env.body do
-      {:ok,
-       %{
-         access_token: access_token,
-         open_id: open_id,
-         refresh_token: refresh_token
-       }}
-    else
-      {:error, reason} ->
-        {:error, reason}
+    with {:ok, %Tesla.Env{body: body, status: 200}} <-
+           get("/oauth2/access_token", query: query_params) do
+      case body do
+        %{"access_token" => access_token, "openid" => open_id, "refresh_token" => refresh_token} ->
+          {:ok,
+           %{
+             access_token: access_token,
+             open_id: open_id,
+             refresh_token: refresh_token
+           }}
 
-      %{"errcode" => 40029} ->
-        {:error, :invalid_code}
+        %{"errcode" => 40029} ->
+          {:error, :invalid_code}
+
+        %{"errcode" => 40163} ->
+          {:error, :code_already_used}
+
+        _ ->
+          body
+      end
     end
   end
 
