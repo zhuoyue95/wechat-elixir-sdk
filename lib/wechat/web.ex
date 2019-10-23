@@ -36,6 +36,9 @@ defmodule Wechat.Web do
         %{"errcode" => 40163} ->
           {:error, :code_already_used}
 
+        %{"errcode" => 41008} ->
+          {:error, :code_missing}
+
         _ ->
           body
       end
